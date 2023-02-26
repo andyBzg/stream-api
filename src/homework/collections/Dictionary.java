@@ -1,6 +1,7 @@
 package homework.collections;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,39 +14,27 @@ public class Dictionary {
         dictionary = new HashMap<>();
     }
 
-    public Map<String, Set<String>> getDictionary() {
-        return dictionary;
+
+    public void addWordAndTranslation(String word, String translation) {
+        if (!dictionary.containsKey(word)) {
+            dictionary.put(word, new HashSet<>());
+        }
+        dictionary.get(word).add(translation);
     }
-
-    public void addWordAndTranslation(String word, Set<String> translation) {
-        dictionary.put(word, translation);
-    }
-
-    /*public Dictionary(Map<String, Set<String>> dictionary) {
-        this.dictionary = dictionary;
-    }*/
-
-    public String showDictionary() {
-        return dictionary.entrySet().toString();
-    }
-
-    public void setDictionary(Map<String, Set<String>> dictionary) {
-        this.dictionary = dictionary;
-    }
-
 
     public String getTranslationOf(String word) {
-        if (dictionary.containsKey(word)) {
-            return dictionary.get(word).toString();
-        }
-        else {
+        if (!dictionary.containsKey(word)) {
             return "Translation of word '" + word + "' does not present in Dictionary";
         }
+        else {
+            return word + ": " + dictionary.get(word).toString();
+        }
     }
 
-    public String addTranslation(String transl) {
-        //TODO реализация метода добавления новых переводов
-        return transl;
+    public void showAll() {
+        dictionary.forEach((s, set) -> {
+                System.out.print(s + ": ");
+                System.out.println(set.toString());
+            });
     }
-
 }
