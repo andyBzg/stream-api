@@ -21,7 +21,7 @@ public class MainForCollections {
 
         getDuplicatesWithCount(source);
 
-
+        System.out.println();
         System.out.println("-----Dictionary----");
 
         /**
