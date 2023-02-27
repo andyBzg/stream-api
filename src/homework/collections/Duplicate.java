@@ -6,9 +6,7 @@ public class Duplicate {
 
     public static void getDuplicatesWithCount(String source) {
 
-        String[] str = source.toLowerCase().split("[,.? ]+");
-
-        List<String> words = List.of(str);
+        List<String> words = List.of(source.toLowerCase().split("[,.? ]+"));
 
         Set<String> set = new HashSet<>();
 
