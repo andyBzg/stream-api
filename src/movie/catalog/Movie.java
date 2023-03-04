@@ -4,11 +4,11 @@ public class Movie {
 
     private String title;
     private int releaseDate;
-    private Genre genre;
+    private String genre;
     private double rating;
 
 
-    public Movie(String title, int releaseDate, Genre genre, double rating) {
+    public Movie(String title, int releaseDate, String genre, double rating) {
         this.title = title;
         this.releaseDate = releaseDate;
         this.genre = genre;
@@ -31,11 +31,11 @@ public class Movie {
         this.releaseDate = releaseDate;
     }
 
-    public Genre getGenre() {
+    public String getGenre() {
         return genre;
     }
 
-    public void setGenre(Genre genre) {
+    public void setGenre(String genre) {
         this.genre = genre;
     }
 
