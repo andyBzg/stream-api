@@ -28,6 +28,7 @@ public class Main {
         catalog.addMovie("Borat", 2006, "Comedy", 7.3);
         catalog.addMovie("Django Unchained", 2012, "Western", 8.4);
         catalog.addMovie("Mad Max: Fury Road", 2015, "Action", 8.1);
+        catalog.addMovie("Terminator 2: Judgment Day", 1991, "Action", 8.6);
 
 //        catalog.remove("Django Unchained");
 //        catalog.updateTitle("Django Unchained", "Django");
