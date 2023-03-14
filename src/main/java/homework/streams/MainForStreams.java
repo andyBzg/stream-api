@@ -2,7 +2,6 @@ package homework.streams;
 
 import java.util.Random;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class MainForStreams {
     public static void main(String[] args) {
@@ -22,18 +21,19 @@ public class MainForStreams {
          в этом возрастном диапазоне. Можно еще одну вариацию, в значение посчитать долю сотрудников в этом возрасте
          относительно всех сотрудников**/
 
-        long answer = streamOfRandomNumbers(10_000);
-        System.out.println(answer);
+        double answer = oddNumbersRatio(10_000);
+        System.out.printf("Доля нечетных чисел в потоке - %s", answer);
+
 
     }
 
-    public static long streamOfRandomNumbers(long streamSize) {
+    public static double oddNumbersRatio(long streamSize) {
         Random random = new Random();
         IntStream stream = random.ints(streamSize);
-        long answer = stream
+        double answer = stream
                 .filter(num -> num % 2 != 0)
                 .count();
-        return answer;
+        return answer / streamSize;
     }
 
 
