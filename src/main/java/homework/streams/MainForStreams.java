@@ -1,31 +1,40 @@
 package homework.streams;
 
-import java.util.Random;
+import homework.employee.Employee;
+import homework.employee.Position;
+import homework.employee.generator.EmployeeGenerator;
+import org.w3c.dom.ls.LSOutput;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.DoubleConsumer;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 public class MainForStreams {
-    public static void main(String[] args) {
-        /**
-         1 Напишите метод, который будет генерировать поток случайных чисел заданного размера
-         (в смысле размер потока, например 10 000 чисел) и определять долю нечетных чисел в нем.
-
-         2 Создайте метод, который будет принимать коллекцию с сотрудниками
-         (можно использовать класс Employee с урока, только создайте чуть больше объектов)
-         и на выходе выдавать мапу где ключом будет должность сотрудника, а значением - средняя заработная плата на этой должности.
-
-         3 Создайте метод, который будет принимать коллекцию с сотрудниками и на выходе выдавать мапу,
-         где ключом будет должность, а значением количество сотрудников, работающих в этой должности.
-
-         4 Создайте метод, который будет принимать коллекцию с сотрудниками и на выходе выдавать мапу,
-         где ключами будут отрезки возрастов по 10 лет, типа 20 - 30, 30 - 40 и тп, а значением количество сотрудников
-         в этом возрастном диапазоне. Можно еще одну вариацию, в значение посчитать долю сотрудников в этом возрасте
-         относительно всех сотрудников**/
+    public static void main(String[] args) throws IOException {
 
         double answer = oddNumbersRatio(10_000);
-        System.out.printf("Доля нечетных чисел в потоке - %s", answer);
+        System.out.printf("Доля нечетных чисел в потоке - %f\n", answer);
 
+
+        List<Employee> employees = EmployeeGenerator.generate();
+//        for (Employee employee : employees) {
+//            System.out.println(employee);
+//        }
+        Map<Position, BigDecimal> map = averageSalaryOnPosition(employees);
+        System.out.println(map);
 
     }
+
+    /**
+     * 1 Напишите метод, который будет генерировать поток случайных чисел заданного размера
+     * (в смысле размер потока, например 10 000 чисел) и определять долю нечетных чисел в нем.
+     **/
 
     public static double oddNumbersRatio(long streamSize) {
         Random random = new Random();
@@ -36,5 +45,53 @@ public class MainForStreams {
         return answer / streamSize;
     }
 
+    /**
+     * 2 Создайте метод, который будет принимать коллекцию с сотрудниками
+     * (можно использовать класс Employee с урока, только создайте чуть больше объектов)
+     * и на выходе выдавать мапу где ключом будет должность сотрудника, а значением - средняя заработная плата на этой должности.
+     **/
+
+    public static Map<Position, BigDecimal> averageSalaryOnPosition(List<Employee> list) {
+        Map<Position, BigDecimal> hashMap = new HashMap<>();
+
+        Set<Position> positions = list.stream()
+                .map(Employee::getPosition)
+                .collect(Collectors.toSet());
+        System.out.println(positions);
+
+        for (Position position : positions) {
+            double average = list.stream()
+                    .filter(e -> e.getPosition().equals(position))
+                    .map(Employee::getSalary)
+                    .mapToDouble(BigDecimal::doubleValue).average()
+                    .getAsDouble();
+            hashMap.put(position, new BigDecimal(average).setScale(2, RoundingMode.HALF_UP));
+        }
+
+        return hashMap;
+    }
+
+    /**
+     * 3 Создайте метод, который будет принимать коллекцию с сотрудниками и на выходе выдавать мапу,
+     * где ключом будет должность, а значением количество сотрудников, работающих в этой должности.
+     **/
+
+    public static Map<String, Integer> numberOfEmployeesByPositions(List<Employee> list) {
+
+        return new HashMap<>();
+    }
+
+
+    /**
+     * 4 Создайте метод, который будет принимать коллекцию с сотрудниками и на выходе выдавать мапу,
+     * где ключами будут отрезки возрастов по 10 лет, типа 20 - 30, 30 - 40 и тп, а значением количество сотрудников
+     * в этом возрастном диапазоне. Можно еще одну вариацию, в значение посчитать долю сотрудников в этом возрасте
+     * относительно всех сотрудников
+     **/
+
+    public static Map<Integer, Integer> numberOfEmployeesByAge(List<Employee> list) {
+
+        return new HashMap<>();
+    }
 
 }
