@@ -26,8 +26,11 @@ public class MainForStreams {
 //        for (Employee employee : employees) {
 //            System.out.println(employee);
 //        }
-        Map<Position, BigDecimal> map = averageSalaryOnPosition(employees);
-        System.out.println(map);
+        Map<Position, BigDecimal> averageSalariesForAllPositions = averageSalaryOnPosition(employees);
+        System.out.println(averageSalariesForAllPositions);
+
+        Map<Position, Integer> countOfEmployeesOnEachPosition = numberOfEmployeesByPositions(employees);
+        System.out.println(countOfEmployeesOnEachPosition);
 
     }
 
@@ -52,12 +55,11 @@ public class MainForStreams {
      **/
 
     public static Map<Position, BigDecimal> averageSalaryOnPosition(List<Employee> list) {
-        Map<Position, BigDecimal> hashMap = new HashMap<>();
+        Map<Position, BigDecimal> map = new HashMap<>();
 
         Set<Position> positions = list.stream()
                 .map(Employee::getPosition)
                 .collect(Collectors.toSet());
-        System.out.println(positions);
 
         for (Position position : positions) {
             double average = list.stream()
@@ -65,10 +67,10 @@ public class MainForStreams {
                     .map(Employee::getSalary)
                     .mapToDouble(BigDecimal::doubleValue).average()
                     .getAsDouble();
-            hashMap.put(position, new BigDecimal(average).setScale(2, RoundingMode.HALF_UP));
+            map.put(position, new BigDecimal(average).setScale(2, RoundingMode.HALF_UP));
         }
 
-        return hashMap;
+        return map;
     }
 
     /**
@@ -76,9 +78,21 @@ public class MainForStreams {
      * где ключом будет должность, а значением количество сотрудников, работающих в этой должности.
      **/
 
-    public static Map<String, Integer> numberOfEmployeesByPositions(List<Employee> list) {
+    public static Map<Position, Integer> numberOfEmployeesByPositions(List<Employee> list) {
+        Map<Position, Integer> map = new HashMap<>();
 
-        return new HashMap<>();
+        Set<Position> positions = list.stream()
+                .map(Employee::getPosition)
+                .collect(Collectors.toSet());
+
+        for (Position position : positions) {
+            long count = list.stream()
+                    .filter(e -> e.getPosition().equals(position))
+                    .count();
+            map.put(position, (int) count);
+        }
+
+        return map;
     }
 
 
