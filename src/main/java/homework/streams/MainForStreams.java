@@ -3,17 +3,13 @@ package homework.streams;
 import homework.employee.Employee;
 import homework.employee.Position;
 import homework.employee.generator.EmployeeGenerator;
-import org.w3c.dom.ls.LSOutput;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.DoubleConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.LongStream;
 
 public class MainForStreams {
     public static void main(String[] args) throws IOException {
@@ -23,14 +19,16 @@ public class MainForStreams {
 
 
         List<Employee> employees = EmployeeGenerator.generate();
-//        for (Employee employee : employees) {
-//            System.out.println(employee);
-//        }
+        System.out.println(employees.size());
+
         Map<Position, BigDecimal> averageSalariesForAllPositions = averageSalaryOnPosition(employees);
         System.out.println(averageSalariesForAllPositions);
 
         Map<Position, Integer> countOfEmployeesOnEachPosition = numberOfEmployeesByPositions(employees);
         System.out.println(countOfEmployeesOnEachPosition);
+
+        Map<String, Integer> range = numberOfEmployeesByAge(employees);
+        System.out.println(range);
 
     }
 
@@ -103,9 +101,31 @@ public class MainForStreams {
      * относительно всех сотрудников
      **/
 
-    public static Map<Integer, Integer> numberOfEmployeesByAge(List<Employee> list) {
+    public static Map<String, Integer> numberOfEmployeesByAge(List<Employee> list) {
 
-        return new HashMap<>();
+        String str1 = "Age 20 - 30 ";
+        String str2 = "Age 31 - 40";
+        String str3 = "Age 41 - 50";
+        String str4 = "Age 51 - 60";
+        String str5 = "Age 61 - 70";
+        String str6 = "Age 71 - 80";
+
+        List<String> range = List.of(str1, str2, str3, str4, str5, str6);
+
+        Map<String, Integer> map = new HashMap<>();
+
+        for (String str : range) {
+            List<Integer> parsedInt = Arrays.stream(str1.split("-"))
+                    .map(s -> s.replaceAll("[^0-9]", ""))
+                    .map(Integer::valueOf)
+                    .toList();
+            long count = list.stream()
+                    .filter(e -> e.getAge() >= parsedInt.get(0) && e.getAge() <= parsedInt.get(1))
+                    .count();
+            map.put(str, (int) count);
+        }
+
+        return map;
     }
 
 }
