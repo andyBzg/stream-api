@@ -16,19 +16,20 @@ public class MainForStreams {
 
         double answer = oddNumbersRatio(10_000);
         System.out.printf("Доля нечетных чисел в потоке - %f\n", answer);
-
+        System.out.println();
 
         List<Employee> employees = EmployeeGenerator.generate();
-        System.out.println(employees.size());
 
         Map<Position, BigDecimal> averageSalariesForAllPositions = averageSalaryOnPosition(employees);
-        System.out.println(averageSalariesForAllPositions);
+        averageSalariesForAllPositions.forEach((position, salary) -> System.out.printf("The average %s's salary is %s\n", position, salary));
+        System.out.println();
 
         Map<Position, Integer> countOfEmployeesOnEachPosition = numberOfEmployeesByPositions(employees);
-        System.out.println(countOfEmployeesOnEachPosition);
+        countOfEmployeesOnEachPosition.forEach((position, count) -> System.out.printf("%d employees as a %s\n", count, position));
+        System.out.println();
 
         Map<String, Integer> range = numberOfEmployeesByAge(employees);
-        System.out.println(range);
+        range.forEach((str, count) -> System.out.printf("%d employees aged %s\n", count, str));
 
     }
 
@@ -59,13 +60,14 @@ public class MainForStreams {
                 .map(Employee::getPosition)
                 .collect(Collectors.toSet());
 
-        for (Position position : positions) {
+        for (Position pos : positions) {
             double average = list.stream()
-                    .filter(e -> e.getPosition().equals(position))
+                    .filter(e -> e.getPosition().equals(pos))
                     .map(Employee::getSalary)
-                    .mapToDouble(BigDecimal::doubleValue).average()
-                    .getAsDouble();
-            map.put(position, new BigDecimal(average).setScale(2, RoundingMode.HALF_UP));
+                    .mapToDouble(BigDecimal::doubleValue)
+                    .average()
+                    .orElse(0.0);
+            map.put(pos, new BigDecimal(average).setScale(2, RoundingMode.HALF_UP));
         }
 
         return map;
@@ -83,11 +85,11 @@ public class MainForStreams {
                 .map(Employee::getPosition)
                 .collect(Collectors.toSet());
 
-        for (Position position : positions) {
+        for (Position pos : positions) {
             long count = list.stream()
-                    .filter(e -> e.getPosition().equals(position))
+                    .filter(emp -> emp.getPosition().equals(pos))
                     .count();
-            map.put(position, (int) count);
+            map.put(pos, (int) count);
         }
 
         return map;
@@ -103,19 +105,19 @@ public class MainForStreams {
 
     public static Map<String, Integer> numberOfEmployeesByAge(List<Employee> list) {
 
-        String str1 = "Age 20 - 30 ";
-        String str2 = "Age 31 - 40";
-        String str3 = "Age 41 - 50";
-        String str4 = "Age 51 - 60";
-        String str5 = "Age 61 - 70";
-        String str6 = "Age 71 - 80";
+        String str1 = "20 - 30";
+        String str2 = "31 - 40";
+        String str3 = "41 - 50";
+        String str4 = "51 - 60";
+        String str5 = "61 - 70";
+        String str6 = "71 - 80";
 
         List<String> range = List.of(str1, str2, str3, str4, str5, str6);
 
         Map<String, Integer> map = new HashMap<>();
 
         for (String str : range) {
-            List<Integer> parsedInt = Arrays.stream(str1.split("-"))
+            List<Integer> parsedInt = Arrays.stream(str.split("-"))
                     .map(s -> s.replaceAll("[^0-9]", ""))
                     .map(Integer::valueOf)
                     .toList();
