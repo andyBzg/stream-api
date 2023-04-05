@@ -18,7 +18,8 @@ public class MainForStreams {
         System.out.printf("Доля нечетных чисел в потоке - %f\n", answer);
         System.out.println();
 
-        List<Employee> employees = EmployeeGenerator.generate();
+        EmployeeGenerator employeeGenerator = new EmployeeGenerator(18, 80, 2500, 3500);
+        List<Employee> employees = employeeGenerator.generate();
 
         Map<Position, BigDecimal> averageSalariesForAllPositions = averageSalaryOnPosition(employees);
         averageSalariesForAllPositions.forEach((position, salary) -> System.out.printf("The average %s's salary is %s\n", position, salary));
@@ -56,9 +57,7 @@ public class MainForStreams {
     public static Map<Position, BigDecimal> averageSalaryOnPosition(List<Employee> list) {
         Map<Position, BigDecimal> map = new HashMap<>();
 
-        Set<Position> positions = list.stream()
-                .map(Employee::getPosition)
-                .collect(Collectors.toSet());
+        Set<Position> positions = getPositions(list);
 
         for (Position pos : positions) {
             double average = list.stream()
@@ -81,9 +80,7 @@ public class MainForStreams {
     public static Map<Position, Integer> numberOfEmployeesByPositions(List<Employee> list) {
         Map<Position, Integer> map = new HashMap<>();
 
-        Set<Position> positions = list.stream()
-                .map(Employee::getPosition)
-                .collect(Collectors.toSet());
+        Set<Position> positions = getPositions(list);
 
         for (Position pos : positions) {
             long count = list.stream()
@@ -130,4 +127,9 @@ public class MainForStreams {
         return map;
     }
 
+    private static Set<Position> getPositions(List<Employee> list) {
+        return list.stream()
+                .map(Employee::getPosition)
+                .collect(Collectors.toSet());
+    }
 }

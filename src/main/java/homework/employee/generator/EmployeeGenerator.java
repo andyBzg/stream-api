@@ -11,34 +11,50 @@ import java.util.Random;
 
 public class EmployeeGenerator {
 
-    private static final String inputFilePath = "src/main/resources/names.txt";
+    private static final String INPUT_FILE_PATH = "src/main/resources/names.txt";
+    private int ageFrom;
+    private int ageTo;
+    private int salaryFrom;
+    private int salaryTo;
 
 
-    public static List<Employee> generate() throws IOException {
+    public EmployeeGenerator(int ageFrom, int ageTo, int salaryFrom, int salaryTo) {
+        this.ageFrom = ageFrom;
+        this.ageTo = ageTo;
+        this.salaryFrom = salaryFrom;
+        this.salaryTo = salaryTo;
+    }
 
-        File file = new File(inputFilePath);
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
 
+    public List<Employee> generate() {
+
+        File file = new File(INPUT_FILE_PATH);
         Random random = new Random();
-
         List<Employee> employees = new ArrayList<>();
 
-        String line;
-        while ((line = bufferedReader.readLine()) != null) {
-            String[] parsedName = line.split(" ");
-            Employee employee = new Employee(
-                    parsedName[0],
-                    parsedName[1],
-                    random.nextInt(18, 80),
-                    new BigDecimal(random.nextInt(2000, 3500)),
-                    Position.getRandomPosition()
-            );
-            employees.add(employee);
-//            System.out.println(employee);
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] parsedName = line.split(" ");
+                if (checkParametersForPositivity()) {
+                    Employee employee = new Employee(
+                            parsedName[0],
+                            parsedName[1],
+                            random.nextInt(ageFrom, ageTo),
+                            new BigDecimal(random.nextInt(salaryFrom, salaryTo)),
+                            Position.getRandomPosition()
+                    );
+                    employees.add(employee);
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
 
-        bufferedReader.close();
-
         return employees;
+    }
+
+    private boolean checkParametersForPositivity() {
+        return ageFrom >= 0 && ageTo >= 0 && salaryFrom >= 0 && salaryTo >= 0;
     }
 }
