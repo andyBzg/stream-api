@@ -4,7 +4,6 @@ import homework.employee.Employee;
 import homework.employee.Position;
 import homework.employee.generator.EmployeeGenerator;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -12,17 +11,17 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class MainForStreams {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
         double answer = oddNumbersRatio(10_000);
-        System.out.printf("Доля нечетных чисел в потоке - %f\n", answer);
+        System.out.printf("Доля нечетных чисел в потоке - %.2f%%\n", answer);
         System.out.println();
 
         EmployeeGenerator employeeGenerator = new EmployeeGenerator(18, 80, 2500, 3500);
         List<Employee> employees = employeeGenerator.generate();
 
         Map<Position, BigDecimal> averageSalariesForAllPositions = averageSalaryOnPosition(employees);
-        averageSalariesForAllPositions.forEach((position, salary) -> System.out.printf("The average %s's salary is %s\n", position, salary));
+        averageSalariesForAllPositions.forEach((position, salary) -> System.out.printf("The average %s's salary is %s €\n", position, salary));
         System.out.println();
 
         Map<Position, Integer> countOfEmployeesOnEachPosition = numberOfEmployeesByPositions(employees);
@@ -45,7 +44,7 @@ public class MainForStreams {
         double answer = stream
                 .filter(num -> num % 2 != 0)
                 .count();
-        return answer / streamSize;
+        return answer / streamSize * 100;
     }
 
     /**
